@@ -112,3 +112,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Other Files
+TestVideo.mp4
+TestTranscript.wav
+
+.DS_Store
