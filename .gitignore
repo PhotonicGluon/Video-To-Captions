@@ -116,5 +116,8 @@ dmypy.json
 # Other Files
 TestVideo.mp4
 TestTranscript.wav
+TestTranscriptShort.wav
+transcript.txt
+TranscriptClean.txt
 
 .DS_Store
