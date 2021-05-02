@@ -62,7 +62,7 @@ class Gentle:
 
         self._run_cmd("docker stop gentle-container", return_output=False)
 
-    def get_timetable(self, audio_file_path, transcript_path, refresh_interval=0.5, raw_timetable=None):
+    def get_timetable(self, audio_file_path, transcript_path, refresh_interval=0.5):
         """
         Method that gets the timetable from the gentle server.
 
@@ -77,10 +77,6 @@ class Gentle:
                 Duration in seconds to wait before refreshing the progress bar.
                 (Default = 0.1)
 
-            raw_timetable (optional[dict]):
-                A pre-existing raw timetable.
-                (Default = None)
-
         Returns:
             list[dict]:
                 The timetable which only contains the words and the times when those words were said.
@@ -91,8 +87,7 @@ class Gentle:
         """
 
         # Get the raw timetable
-        if raw_timetable is None:
-            raw_timetable = self._get_raw_timetable(audio_file_path, transcript_path, refresh_interval=refresh_interval)
+        raw_timetable = self._get_raw_timetable(audio_file_path, transcript_path, refresh_interval=refresh_interval)
 
         # Get all the words and their related data points
         words = raw_timetable["words"]  # This is a list of dictionaries
