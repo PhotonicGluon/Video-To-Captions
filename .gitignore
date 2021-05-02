@@ -114,10 +114,11 @@ dmypy.json
 .pyre/
 
 # Other Files
+AlignedTimetable.txt
 TestVideo.mp4
 TestTranscript.wav
 TestTranscriptShort.wav
-TestResponse.json
+TestResponse.txt
 transcript.txt
 TranscriptClean.txt
 

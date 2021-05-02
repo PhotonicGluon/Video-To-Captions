@@ -133,15 +133,14 @@ class Aligner:
 if __name__ == "__main__":
     # Imports
     import ast
-    from pprint import pprint
 
     # Read the timetable and transcript
     aTranscript = open("../../TranscriptClean.txt", "r").read()
-    aTimetable = ast.literal_eval(open("TestResponse.json", "r").read())
+    aTimetable = ast.literal_eval(open("TestResponse.txt", "r").read())
 
     # Create an `Aligner` object
     aligner = Aligner(aTranscript, aTimetable)
 
     # Align the words
     alignedWords = aligner.align_time()
-    pprint(alignedWords)
+    print(alignedWords)
