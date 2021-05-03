@@ -1,1 +1,2 @@
-from get_timetable import get_timetable
+from .gentle import Gentle
+from .get_timetable import get_timetable

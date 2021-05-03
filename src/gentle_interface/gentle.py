@@ -2,7 +2,7 @@
 gentle.py
 
 Created on 2021-04-28
-Updated on 2021-05-02
+Updated on 2021-05-03
 
 Copyright © Ryan Kan
 
@@ -173,7 +173,7 @@ class Gentle:
         total = int(math.ceil(audio_duration / float(chunk_len - overlap_t)))
 
         # Define a new progress bar object
-        progress_bar = tqdm(desc="Aligning Transcript to Audio File", total=total)
+        progress_bar = tqdm(desc="Creating Timetable From Audio and Transcript", total=total)
 
         # Read from console output until `total - 1` outputs have been received in total
         num_outputs = 0

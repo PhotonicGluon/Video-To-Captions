@@ -7,6 +7,9 @@ Updated on 2021-04-27
 Copyright © Ryan Kan
 
 Description: Implements the initial conversion from a WAV file to a string.
+
+Todo:
+    - Either depreciate this or make the captions generator work better.
 """
 
 # IMPORTS

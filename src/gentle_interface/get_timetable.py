@@ -2,7 +2,7 @@
 get_timetable.py
 
 Created on 2021-05-02
-Updated on 2021-05-02
+Updated on 2021-05-03
 
 Copyright © Ryan Kan
 
@@ -12,7 +12,7 @@ Description: Gets the timetable of spoken words from the audio file.
 # IMPORTS
 import os
 
-from gentle import Gentle
+from src.gentle_interface import Gentle
 
 
 # FUNCTIONS
