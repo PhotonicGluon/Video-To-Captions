@@ -18,6 +18,7 @@ import subprocess
 import time
 import wave
 
+import aiohttp.client_exceptions
 from aiohttp import ClientSession, ClientResponseError
 from tqdm import tqdm
 
@@ -253,8 +254,12 @@ class Gentle:
         async def __request_post_helper():
             """Helper method to assist with the retrieval of the timetable."""
             async with ClientSession() as session:
-                async with session.post(url="http://localhost:8765/transcriptions?async=false", data=files) as response:
-                    return await response.json()
+                try:
+                    async with session.post(url="http://localhost:8765/transcriptions?async=false",
+                                            data=files) as response:
+                        return await response.json()
+                except aiohttp.client_exceptions.ServerDisconnectedError:
+                    raise ConnectionError("The server disconnected from the program. Please try again.")
 
         file_passing_task = asyncio.create_task(__request_post_helper())
 

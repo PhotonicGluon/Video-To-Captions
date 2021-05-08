@@ -82,7 +82,7 @@ else:
 
 # OUTPUT
 print("Writing captions to file...")
-with open(args.output_file + CAPTION_TYPE_TO_EXTENSION[args.caption_type], "w+") as f:
+with open(args.output_file_name + CAPTION_TYPE_TO_EXTENSION[args.caption_type], "w+") as f:
     f.write(captionContent)
 
 print("Done!\nPlease review the generated file and fix any errors that may arise during captioning.")
