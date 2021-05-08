@@ -2,7 +2,7 @@
 main.py
 
 Created on 2021-05-03
-Updated on 2021-05-03
+Updated on 2021-05-08
 
 Copyright © Ryan Kan
 
@@ -30,9 +30,17 @@ parser = argparse.ArgumentParser(description="A Program that helps convert a vid
 parser.add_argument("video_file", help="The video file to be captioned.")
 parser.add_argument("transcript_file", help="The transcript of the video.")
 
-parser.add_argument("-b", "--block-type", help="How the captions should be grouped.", choices=["time"], default="time")
-parser.add_argument("-c", "--caption-type", help="Format of the captions.", choices=["webvtt"], default="webvtt")
-parser.add_argument("-o", "--output-file", help="Name of the output file, without the extension", default="transcript")
+parser.add_argument("-b", "--block-type", choices=["time", "sentence"], default="sentence",
+                    help="How the captions should be grouped.")
+parser.add_argument("-d", "--block-duration", type=int, default=5,
+                    help="The length of time that makes up each block. Must be a positive integer."
+                         "Provide it only if `block-type` is 'time'.")
+parser.add_argument("-l", "--max-block-length", type=int, default=15,
+                    help="The maximum number of timetabled words that can be in each caption block. Must be a "
+                         "positive integer. Provide it only if `block-type` is 'sentence'.")
+parser.add_argument("-c", "--caption-type", choices=["webvtt"], default="webvtt", help="Format of the captions.")
+parser.add_argument("-o", "--output-file-name", default="transcript",
+                    help="Name of the output file, without the extension")
 
 # Parse the arguments
 args = parser.parse_args()
@@ -43,6 +51,9 @@ if not os.path.isfile(args.video_file):
 
 if not os.path.isfile(args.transcript_file):
     raise FileNotFoundError(f"A transcript does not exist at the path '{args.transcript}'.")
+
+assert args.block_duration > 0, "The block duration must be a positive integer."
+assert args.max_block_length > 0, "The maximum block length must be a positive integer."
 
 # PROCESSES
 # Extract the audio from the video file
@@ -58,9 +69,9 @@ print("Aligning timetable with transcript...")
 aligner = Aligner(open(args.transcript_file, "r").read(), alignedTimetable)
 
 if args.block_type == "time":
-    alignedTimetable = aligner.align_time()
-else:
-    alignedTimetable = None
+    alignedTimetable = aligner.align_time(args.block_duration)
+elif args.block_type == "sentence":
+    alignedTimetable = aligner.align_sentence(args.max_block_length)
 
 # Convert the `alignedTimetable` into a captions string
 print("Converting aligned timetable to captions...")
@@ -74,7 +85,8 @@ print("Writing captions to file...")
 with open(args.output_file + CAPTION_TYPE_TO_EXTENSION[args.caption_type], "w+") as f:
     f.write(captionContent)
 
-print("Done!")
+print("Done!\nPlease review the generated file and fix any errors that may arise during captioning.")
 
 # CLEANUP
+# Remove the temporary audio file
 os.remove("audio_temp.wav")
