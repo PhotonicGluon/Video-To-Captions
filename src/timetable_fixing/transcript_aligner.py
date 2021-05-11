@@ -2,7 +2,7 @@
 transcript_aligner.py
 
 Created on 2021-05-02
-Updated on 2021-05-08
+Updated on 2021-05-11
 
 Copyright © Ryan Kan
 
@@ -166,7 +166,9 @@ class Aligner:
             end_pos = timetable_word["endOffset"]  # This is the position of the character that is one after the word
 
             # Check if the sentence ends on the current word
-            if self.transcript[end_pos] in sentence_ending_characters:
+            # We do this by checking if the current character is one of the `sentence_ending_characters` and the
+            # character after that is not a space.
+            if self.transcript[end_pos] in sentence_ending_characters and self.transcript[end_pos + 1].isspace():
                 # Set the time which the current caption block ends
                 if "end" in timetable_word:
                     block_end_time = timetable_word["end"]
@@ -197,7 +199,7 @@ class Aligner:
             # Check if the sentence ended on the previous word
             else:
                 # Get the non-whitespace character that is to the left of the word
-                non_whitespace_char_pos = start_pos - 1
+                non_whitespace_char_pos = start_pos - 2  # Ignore the previous character as it is likely to be a space
 
                 while self.transcript[non_whitespace_char_pos].isspace():
                     non_whitespace_char_pos -= 1
@@ -256,71 +258,6 @@ class Aligner:
 
         # Return the `aligned_words` array
         return aligned_words
-
-        # # Todo: re-write this part, but use the timetable words as reference points instead of the raw transcript.
-        # #       This is because the timetable words cannot be wrong and will definitely appear in the transcript. But
-        # #       the words that we independently extract here may not be correct and may cause weird errors.
-        #
-        # # Get all the sentences in the transcript
-        # plain_text = re.sub(r"\s+", " ", self.transcript.replace("\n", " ")).lstrip()
-        # sentences = re.split(r"[.!?-]", plain_text)
-        # print(sentences)
-        #
-        # # Iterate through each sentence and attempt to determine the time which the sentence started and when it ended
-        # aligned_words = []
-        # current_timetabled_word_index = 0
-        #
-        # for sentence in sentences:
-        #     # Split each sentence with the space being the delimiter
-        #     pseudo_words = sentence.split()  # It may not a word per se, but it is close enough for a comparison
-        #
-        #     # Count the number of pseudo-words
-        #     num_pseudo_words = len(pseudo_words)
-        #
-        #     # Count the number of blocks that are needed to complete the sentence
-        #     num_blocks = int(ceil(num_pseudo_words / max_block_length))
-        #
-        #     # Get the start and end time of the blocks in the sentence
-        #     for block_num in range(num_blocks):
-        #         # Get the start and end word of the block
-        #         start_word = self.timetable[current_timetabled_word_index]
-        #
-        #         for pseudo_word in pseudo_words[block_num * max_block_length:(block_num + 1) * max_block_length]:
-        #             # print("PSEUDO-WORD", pseudo_word, self.timetable[current_timetabled_word_index]) todo: remove
-        #             # Check if the pseudo-word is found inside the timetable
-        #             current_timetable_word = self.timetable[current_timetabled_word_index]
-        #             if pseudo_word.lower().find(current_timetable_word["word"].lower()) != -1:
-        #                 current_timetabled_word_index += 1  # Increment the timetabled word index
-        #
-        #         end_word = self.timetable[current_timetabled_word_index]
-        #
-        #         # Check if the end word is valid
-        #         while end_word["case"] != "success":
-        #             current_timetabled_word_index += 1
-        #             end_word = self.timetable[current_timetabled_word_index]
-        #
-        #         # Process the text that will be in the block
-        #         raw_block_text = self.transcript[start_word["startOffset"]:end_word["startOffset"]]
-        #
-        #         # Remove the last character as it is a space
-        #         raw_block_text = raw_block_text[:-1]
-        #
-        #         # Remove all newline characters
-        #         block_text = re.sub(r"\s+", " ", raw_block_text.replace("\n", " "))
-        #         print(f"'{block_text}'", start_word, end_word)
-        #
-        #         # Convert that info to a dictionary
-        #         dict_with_more_info = {
-        #             "start_time": start_word["start"],
-        #             "end_time": end_word["start"],
-        #             "text": block_text
-        #         }
-        #
-        #         # Append that dictionary to the `aligned_words` array
-        #         aligned_words.append(dict_with_more_info)
-        #
-        # # Return the aligned words array
-        # return aligned_words
 
 
 # TESTING CODE
