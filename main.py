@@ -2,11 +2,14 @@
 main.py
 
 Created on 2021-05-03
-Updated on 2021-05-08
+Updated on 2021-05-11
 
 Copyright © Ryan Kan
 
 Description: The main file.
+
+Todo:
+    - Make this work for just audio files with no video.
 """
 
 # IMPORTS
@@ -40,7 +43,7 @@ parser.add_argument("-l", "--max-block-length", type=int, default=15,
                          "positive integer. Provide it only if `block-type` is 'sentence'.")
 parser.add_argument("-c", "--caption-type", choices=["webvtt"], default="webvtt", help="Format of the captions.")
 parser.add_argument("-o", "--output-file-name", default="transcript",
-                    help="Name of the output file, without the extension")
+                    help="Name of the output file, without the extension.")
 
 # Parse the arguments
 args = parser.parse_args()
