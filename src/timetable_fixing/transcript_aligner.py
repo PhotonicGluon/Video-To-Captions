@@ -2,7 +2,7 @@
 transcript_aligner.py
 
 Created on 2021-05-02
-Updated on 2021-05-11
+Updated on 2021-05-13
 
 Copyright © Ryan Kan
 
@@ -178,13 +178,14 @@ class Aligner:
                     block_end_time = second_per_char * end_pos
 
                 # Create the dictionary that will go into the `aligned_words` array
-                dict_with_more_info = {
+                text = self.transcript[block_start_index:end_pos + 1]  # Get text from transcript
+                text = re.sub(r"\s+", " ", text.strip().replace("\n", " "))  # Process the text for display
+
+                aligned_words.append({
                     "start_time": block_start_time,
                     "end_time": block_end_time,
-                    "text": self.transcript[block_start_index:end_pos + 1].strip()
-                }
-
-                aligned_words.append(dict_with_more_info)
+                    "text": text
+                })
 
                 # Update the block's starting time, starting index and block length
                 block_start_time = None  # Wait for the new word to override this
@@ -215,13 +216,14 @@ class Aligner:
                         block_end_time = second_per_char * non_whitespace_char_pos
 
                     # Create the dictionary that will go into the `aligned_words` array
-                    dict_with_more_info = {
+                    text = self.transcript[block_start_index:non_whitespace_char_pos + 1]
+                    text = re.sub(r"\s+", " ", text.strip().replace("\n", " "))  # Process the text for display
+
+                    aligned_words.append({
                         "start_time": block_start_time,
                         "end_time": block_end_time,
-                        "text": self.transcript[block_start_index:non_whitespace_char_pos + 1].strip()
-                    }
-
-                    aligned_words.append(dict_with_more_info)
+                        "text": text
+                    })
 
                     # Update the block's starting time, starting index and block length
                     block_start_time = block_end_time  # The sentence already started
@@ -239,13 +241,14 @@ class Aligner:
                         block_end_time = second_per_char * end_pos
 
                     # Create the dictionary that will go into the `aligned_words` array
-                    dict_with_more_info = {
+                    text = self.transcript[block_start_index:end_pos + 1]
+                    text = re.sub(r"\s+", " ", text.strip().replace("\n", " "))  # Process the text for display
+
+                    aligned_words.append({
                         "start_time": block_start_time,
                         "end_time": block_end_time,
-                        "text": self.transcript[block_start_index:end_pos + 1].strip()
-                    }
-
-                    aligned_words.append(dict_with_more_info)
+                        "text": text
+                    })
 
                     # Update the block's starting time
                     block_start_time = block_end_time  # Continue the sentence in the next block
