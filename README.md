@@ -1,10 +1,12 @@
 # Video-To-Captions
-A Program that helps convert a video and a transcript into a captions file with timestamps.
+A Program that helps convert a media file and a transcript into a captions file with timestamps.
 
 ## Longer Description
 This program aims to help cut down time on creating captions for videos which have a fixed transcript.
 
-Creating captions for videos is sometimes a long and labourious process, so I've made this program to help relieve some *pain* from the video creator. 
+Creating captions for videos is sometimes a long and labourious process, so I've made this program to help relieve some *pain* from the video creator.
+
+Sometimes, you just have a static visual for your video and it is the audio file which contains the audio data. This program also supports this by including an "audio only" option.
 
 ## Requirements
 - FFmpeg (install it using your system's package manager, **not using PIP**)
@@ -47,9 +49,9 @@ It is recommended to install the Python packages into a [virtual environment](ht
 ## Usage
 To use the program, navigate to the root directory of the project and run
 ```bash
-python main.py [video_file] [transcript_file]
+python main.py [video_or_audio_file] [transcript_file]
 ```
-to generate a WebVTT captions file given the provided `video_file` path and the `transcript_file` path.
+to generate a WebVTT captions file given the provided `video_or_audio_file` path and the `transcript_file` path.
 
 You can customise the options to the program. Simply run
 ```bash
@@ -69,8 +71,6 @@ The following list shows the currently accepted captioning processes:
 ## Supported Caption Formats
 The following list shows the currently valid caption formats:
 - WebVTT (`.vtt`)
-
-I'm planning to add support for other caption formats in the future, but I don't know when that will be.
 
 ## License
 MIT License
