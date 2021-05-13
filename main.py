@@ -2,21 +2,19 @@
 main.py
 
 Created on 2021-05-03
-Updated on 2021-05-11
+Updated on 2021-05-13
 
 Copyright © Ryan Kan
 
 Description: The main file.
-
-Todo:
-    - Make this work for just audio files with no video.
 """
 
 # IMPORTS
 import argparse
 import os
 
-from src.conversion import video_to_wav, timetable_to_webvtt
+from src.conversion import video_to_wav, audio_to_wav, timetable_to_webvtt, SUPPORTED_VIDEO_EXTENSIONS, \
+    SUPPORTED_AUDIO_EXTENSIONS
 from src.gentle_interface import get_timetable
 from src.timetable_fixing import Aligner
 
@@ -27,10 +25,14 @@ CAPTION_TYPE_TO_EXTENSION = {
 
 # INPUT
 # Initialise the argument parser
-parser = argparse.ArgumentParser(description="A Program that helps convert a video into a transcript with timestamps.")
+parser = argparse.ArgumentParser(description="A Program that helps convert a video into a transcript with timestamps.",
+                                 formatter_class=argparse.RawTextHelpFormatter)
 
 # Add the arguments
-parser.add_argument("video_file", help="The video file to be captioned.")
+parser.add_argument("video_or_audio_file", help=f"The video/audio file to be captioned. The extension of the file "
+                                                f"should be in one of the following lists:\n"
+                                                f"Video: {list(SUPPORTED_VIDEO_EXTENSIONS.keys())}\n"
+                                                f"Audio: {list(SUPPORTED_AUDIO_EXTENSIONS.keys())}")
 parser.add_argument("transcript_file", help="The transcript of the video.")
 
 parser.add_argument("-b", "--block-type", choices=["time", "sentence"], default="sentence",
@@ -49,8 +51,8 @@ parser.add_argument("-o", "--output-file-name", default="transcript",
 args = parser.parse_args()
 
 # Run validation on the provided inputs
-if not os.path.isfile(args.video_file):
-    raise FileNotFoundError(f"A video file does not exist at the path '{args.video_file}'.")
+if not os.path.isfile(args.video_or_audio_file):
+    raise FileNotFoundError(f"A file does not exist at the path '{args.video_or_audio_file}'.")
 
 if not os.path.isfile(args.transcript_file):
     raise FileNotFoundError(f"A transcript does not exist at the path '{args.transcript}'.")
@@ -58,10 +60,21 @@ if not os.path.isfile(args.transcript_file):
 assert args.block_duration > 0, "The block duration must be a positive integer."
 assert args.max_block_length > 0, "The maximum block length must be a positive integer."
 
+extension = os.path.splitext(args.video_or_audio_file)[-1]
+assert extension in SUPPORTED_VIDEO_EXTENSIONS or extension in SUPPORTED_AUDIO_EXTENSIONS, \
+    "The format of the video or audio file is not currently supported. " \
+    f"(Supported: {list(SUPPORTED_VIDEO_EXTENSIONS.keys()) + list(SUPPORTED_AUDIO_EXTENSIONS.keys())}"
+
 # PROCESSES
-# Extract the audio from the video file
-print("Extracting audio from video file...")
-audioFilePath = video_to_wav(args.video_file, wav_file_name="audio_temp")
+# Get the extension of the video or audio file
+extension = os.path.splitext(args.video_or_audio_file)[-1]
+
+# Extract the audio from the video or audio file depending on the file's extension
+print("Extracting audio from the video or audio file...")
+if extension in SUPPORTED_VIDEO_EXTENSIONS:
+    audioFilePath = video_to_wav(args.video_or_audio_file, wav_file_name="audio_temp")
+else:
+    audioFilePath = audio_to_wav(args.video_or_audio_file, wav_file_name="audio_temp")
 
 # Get the timetable from the audio file and the transcript
 print("Getting timetable from transcript and audio file...")
@@ -88,7 +101,7 @@ print("Writing captions to file...")
 with open(args.output_file_name + CAPTION_TYPE_TO_EXTENSION[args.caption_type], "w+") as f:
     f.write(captionContent)
 
-print("Done!\nPlease review the generated file and fix any errors that may arise during captioning.")
+print("Done. Please review the generated file and fix any errors that may arise during captioning.")
 
 # CLEANUP
 # Remove the temporary audio file

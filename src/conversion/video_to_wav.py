@@ -2,7 +2,7 @@
 video_to_wav.py
 
 Created on 2021-04-26
-Updated on 2021-04-26
+Updated on 2021-05-13
 
 Copyright © Ryan Kan
 
@@ -18,7 +18,7 @@ from pydub import AudioSegment
 SUPPORTED_VIDEO_EXTENSIONS = {
     ".mp4": "mp4",
     ".wma": "wma",
-    ".aiff": "aac"
+    ".mov": "mov"
 }
 
 
@@ -53,9 +53,8 @@ def video_to_wav(video_file, wav_file_name="transcript"):
 
     # Check if the video file's extension works
     extension = os.path.splitext(video_file)[-1]
-
-    if extension not in SUPPORTED_VIDEO_EXTENSIONS:
-        raise AssertionError(f"The extension {extension} is currently unsupported by the program.")
+    assert extension in SUPPORTED_VIDEO_EXTENSIONS, f"The extension {extension} is currently unsupported by the " \
+                                                    "program."
 
     # Convert the video file into a WAV file
     AudioSegment.from_file(video_file, SUPPORTED_VIDEO_EXTENSIONS[extension]).export(f"{wav_file_name}.wav", "wav")
