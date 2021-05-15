@@ -1,15 +1,15 @@
 """
-timetable_to_webvtt.py
+timetable_to_subrip.py
 
-Created on 2021-05-02
+Created on 2021-05-15
 Updated on 2021-05-15
 
 Copyright © Ryan Kan
 
-Description: Converts the aligned timetable into the WebVTT format.
+Description: Converts the aligned timetable into the SubRip format.
 
 References:
-    - https://w3c.github.io/webvtt/
+    - https://en.wikipedia.org/wiki/SubRip#SubRip_text_file_format
 """
 
 # IMPORTS
@@ -17,9 +17,9 @@ from datetime import timedelta
 
 
 # FUNCTIONS
-def timedelta_to_webvtt_time(timedelta_object):
+def timedelta_to_subrip_time(timedelta_object):
     """
-    Converts a timedelta object to a valid WebVTT timestamp.
+    Converts a timedelta object to a valid SubRip timestamp.
 
     Args:
         timedelta_object (datetime.timedelta)
@@ -35,15 +35,15 @@ def timedelta_to_webvtt_time(timedelta_object):
     final = str(auxiliary_timedelta)  # Should be in the form "HH:MM:SS"
 
     # Now add on the milliseconds
-    final += f".{timedelta_object.microseconds // 1000:03d}"  # Should now be in the form "HH:MM:SS.mmm"
+    final += f",{timedelta_object.microseconds // 1000:03d}"  # Should now be in the form "HH:MM:SS,mmm"
 
     # Return the final string
     return final
 
 
-def timetable_to_webvtt(aligned_timetable):
+def timetable_to_subrip(aligned_timetable):
     """
-    Converts the aligned timetable into the WebVTT format.
+    Converts the aligned timetable into the SubRip format.
 
     Args:
         aligned_timetable (list[dict]):
@@ -51,20 +51,20 @@ def timetable_to_webvtt(aligned_timetable):
 
     Returns:
         str:
-            Text representing a WebVTT file.
+            Text representing a SubRip file.
     """
 
-    # Every WebVTT file starts with this
-    file_contents = "WEBVTT\n\n"
+    # Define a variable to contain the file's contents
+    file_contents = ""
 
     # Process each block
-    for block in aligned_timetable:
+    for i, block in enumerate(aligned_timetable):
         # Define a temporary variable to store this caption block
-        block_text = ""
+        block_text = f"{i + 1}\n"  # Every SubRip caption block starts with a number
 
         # Get the start and end time of the block
-        start_time = timedelta_to_webvtt_time(timedelta(seconds=block["start_time"]))
-        end_time = timedelta_to_webvtt_time(timedelta(seconds=block["end_time"]))
+        start_time = timedelta_to_subrip_time(timedelta(seconds=block["start_time"]))
+        end_time = timedelta_to_subrip_time(timedelta(seconds=block["end_time"]))
 
         # Add the timing line to the block of text
         block_text += f"{start_time} --> {end_time}\n"
@@ -88,5 +88,5 @@ if __name__ == "__main__":
     alignedTimetable = ast.literal_eval(open("AlignedTimetable.txt", "r").read())
 
     # Test the conversion function
-    vtt = timetable_to_webvtt(alignedTimetable)
-    print(vtt)
+    subrip = timetable_to_subrip(alignedTimetable)
+    print(subrip)

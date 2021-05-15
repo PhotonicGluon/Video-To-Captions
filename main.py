@@ -2,7 +2,7 @@
 main.py
 
 Created on 2021-05-03
-Updated on 2021-05-13
+Updated on 2021-05-15
 
 Copyright © Ryan Kan
 
@@ -13,14 +13,15 @@ Description: The main file.
 import argparse
 import os
 
-from src.conversion import video_to_wav, audio_to_wav, timetable_to_webvtt, SUPPORTED_VIDEO_EXTENSIONS, \
-    SUPPORTED_AUDIO_EXTENSIONS
+from src.conversion import video_to_wav, audio_to_wav, timetable_to_subrip, timetable_to_webvtt, \
+    SUPPORTED_VIDEO_EXTENSIONS, SUPPORTED_AUDIO_EXTENSIONS
 from src.gentle_interface import get_timetable
 from src.timetable_fixing import Aligner
 
 # CONSTANTS
 CAPTION_TYPE_TO_EXTENSION = {
-    "webvtt": ".vtt"
+    "webvtt": ".vtt",
+    "subrip": ".srt"
 }
 
 # INPUT
@@ -43,7 +44,8 @@ parser.add_argument("-d", "--block-duration", type=int, default=5,
 parser.add_argument("-l", "--max-block-length", type=int, default=15,
                     help="The maximum number of timetabled words that can be in each caption block. Must be a "
                          "positive integer. Provide it only if `block-type` is 'sentence'.")
-parser.add_argument("-c", "--caption-type", choices=["webvtt"], default="webvtt", help="Format of the captions.")
+parser.add_argument("-c", "--caption-type", choices=["webvtt", "subrip"], default="webvtt",
+                    help="Format of the captions.")
 parser.add_argument("-o", "--output-file-name", default="transcript",
                     help="Name of the output file, without the extension.")
 
@@ -93,7 +95,10 @@ elif args.block_type == "sentence":
 print("Converting aligned timetable to captions...")
 if args.caption_type == "webvtt":
     captionContent = timetable_to_webvtt(alignedTimetable)
+elif args.caption_type == "subrip":
+    captionContent = timetable_to_subrip(alignedTimetable)
 else:
+    # This should never get here, but just in case include an else clause
     captionContent = ""
 
 # OUTPUT

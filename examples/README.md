@@ -13,4 +13,6 @@ python main.py examples/lucier.mp3 examples/lucier.txt
 ```
 in the root directory of the project instead.
 
-The caption file that is generated from this process is named `lucier.vtt`.
+In both of the above examples, the file that is generated is in the WebVTT format. Thus its corresponding output is named `WebVTT.vtt`.
+
+The output that is generated in the SubRip Text format is named `SubRip.srt`.

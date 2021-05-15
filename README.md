@@ -69,8 +69,9 @@ The following list shows the currently accepted captioning processes:
     - Words that are in the same sentence will be grouped together in the same caption block and will be displayed together, unless the sentence has more than `MAX_BLOCK_LENGTH` words which the program will then split the sentence into multiple blocks.
 
 ## Supported Caption Formats
-The following list shows the currently valid caption formats:
-- WebVTT (`.vtt`)
+The following list shows the currently supported caption formats:
+- Web Video Text Tracks format (WebVTT) [`.vtt`]
+- SubRip Text (SubRip) [`.srt`]
 
 ## License
 MIT License
