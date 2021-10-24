@@ -18,8 +18,7 @@ import subprocess
 import time
 import wave
 
-import aiohttp.client_exceptions
-from aiohttp import ClientSession, ClientResponseError
+from aiohttp import ClientResponseError, ClientSession, ClientTimeout, ServerDisconnectedError
 from tqdm import tqdm
 
 
@@ -254,7 +253,7 @@ class Gentle:
         async def __request_post_helper():
             """Helper method to assist with the retrieval of the timetable."""
             # Define the timeout duration
-            timeout = aiohttp.ClientTimeout(total=duration * 2.5)  # Make the timeout twice as long as the video file
+            timeout = ClientTimeout(total=duration * 2.5)  # Make the timeout twice as long as the video file
 
             # Define an asynchronous client session object
             async with ClientSession(timeout=timeout) as session:
@@ -263,7 +262,7 @@ class Gentle:
                     async with session.post(url="http://localhost:8765/transcriptions?async=false",
                                             data=files) as response:
                         return await response.json()  # Return whatever is sent back by the server
-                except aiohttp.client_exceptions.ServerDisconnectedError:
+                except ServerDisconnectedError:
                     # Something went wrong; report as an error message
                     raise ConnectionError("The server disconnected from the program. Please try again.")
 

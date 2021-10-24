@@ -12,7 +12,7 @@ Description: Gets the timetable of spoken words from the audio file.
 # IMPORTS
 import os
 
-from src.gentle_interface import Gentle
+from src.gentle_interface.gentle import Gentle
 
 
 # FUNCTIONS
